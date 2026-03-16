@@ -86,7 +86,8 @@ jobs:
           iscc .\Misc\inno.iss /O+installer
 
       - name: Show generated files
-        run: dir /s
+        shell: powershell
+        run: Get-ChildItem -Recurse
 
       - name: Publish latest pre-release
         uses: softprops/action-gh-release@v2
@@ -100,8 +101,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - if: startsWith(github.ref, 'refs/tags/v')
-        name: Publish tagged release
+      - name: Publish tagged release
+        if: startsWith(github.ref, 'refs/tags/v')
         uses: softprops/action-gh-release@v2
         with:
           make_latest: true
