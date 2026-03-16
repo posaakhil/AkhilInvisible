@@ -2,6 +2,9 @@ name: Build App
 
 on: [push]
 
+permissions:
+  contents: write
+
 jobs:
   build32:
     runs-on: windows-latest
@@ -10,20 +13,25 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+
       - name: Build project
         run: |
           rustup target add i686-pc-windows-msvc
           cargo build -p payload --release --target i686-pc-windows-msvc
+
       - name: Rename 32-bit dll
         shell: powershell
         run: Rename-Item -Path .\target\i686-pc-windows-msvc\release\utils.dll -NewName utils32.dll
 
-      - name: Upload ${{ matrix.target }} artifacts
+      - name: Upload x86 artifacts
         uses: actions/upload-artifact@v4
         with:
           name: x86-binaries
           path: target/i686-pc-windows-msvc/release/utils32.dll
           if-no-files-found: error
+
 
   build:
     runs-on: windows-latest
@@ -31,6 +39,9 @@ jobs:
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
 
       - name: Build project
         run: cargo build --release
@@ -43,6 +54,7 @@ jobs:
             target/release/*.exe
             target/release/*.dll
           if-no-files-found: error
+
 
   release:
     runs-on: windows-latest
@@ -78,6 +90,9 @@ jobs:
           files: |
             Invisiwind.zip
             Misc/Output/InvisiwindInstaller.exe
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - if: startsWith(github.ref, 'refs/tags/v')
         name: Publish tagged release
         uses: softprops/action-gh-release@v2
@@ -87,3 +102,5 @@ jobs:
           files: |
             AkhilInvisible.zip
             Misc/Output/AkhilInvisibleInstaller.exe
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
