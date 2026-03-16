@@ -5,7 +5,7 @@
 #define MyAppVersion "2.0.0"
 #define MyAppPublisher "posaakhil"
 #define MyAppURL "https://github.com/posaakhil/AkhilInvisible"
-#define MyAppExeName "Invisiwind.exe"
+#define MyAppExeName "AkhilInvisible.exe"
 
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application. Do not use the same AppId value in installers for other applications.
