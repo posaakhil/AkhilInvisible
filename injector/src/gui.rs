@@ -421,7 +421,7 @@ pub fn start() {
     }
 
     eframe::run_native(
-        "Invisiwind",
+        "AkhilInvisible",
         options,
         Box::new(|cc| {
             // This gives us image support:
